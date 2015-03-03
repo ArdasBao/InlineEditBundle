@@ -1,0 +1,4 @@
+ardasbao_inlineedit_variables:
+    resource: "@ArdasBaoInlineEditBundle/Controller/VariableController.php"
+    type:     annotation
+    prefix:   /

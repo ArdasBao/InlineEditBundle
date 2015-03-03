@@ -1,0 +1,54 @@
+.variable-wrapper {
+    position: relative;
+}
+
+.inlineedit-toolbar {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.baoinlineeditor {
+    min-height: 30px;
+    display: inline-block;
+}
+
+.baoinlineeditor-error {
+    color: red;
+    font-size: 80%;
+}
+
+.baoinlineeditor-button {
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.baoinlineeditor-button-edit:before {
+    content: 'Edit';
+}
+
+.baoinlineeditor-button-save:before {
+    content: 'Save';
+}
+
+.baoinlineeditor-button-cancel:before {
+    content: 'Cancel';
+}
+
+.baoinlineeditor-button-throbber:before {
+    content: 'Saving...';
+}
+
+.baoinlineeditor-ckeditor {
+    position: relative;
+    overflow: visible;
+    display: block;
+}
+
+.baoinlineeditor-ckeditor .baoinlineeditor-buttons {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    overflow: visible;
+}
+

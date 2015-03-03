@@ -1,0 +1,23 @@
+parameters:
+    ardasbao.inlineeditor.class: 'ArdasBao\InlineEditBundle\Services\InlineEditor'
+    ardasbao.inlineeditor.editorRole: 'ROLE_MANAGER'
+    ardasbao.inlineeditor.variablesManager: 'ardas.variables.service'
+
+    ardasbao.inlineeditor.extension.class: 'ArdasBao\InlineEditBundle\Templating\InlineEditExtension'
+
+services:
+
+    ardasbao.inlineeditor:
+          class: '%ardasbao.inlineeditor.class%'
+          arguments:
+              - '@service_container'
+
+              - editorRole: '%ardasbao.inlineeditor.editorRole%'
+                variablesManager: '%ardasbao.inlineeditor.variablesManager%'
+
+    ardasbao.inlineeditor.extension:
+          class: '%ardasbao.inlineeditor.extension.class%'
+          arguments:
+              - '@ardasbao.inlineeditor'
+          tags:
+              - { name: twig.extension }
