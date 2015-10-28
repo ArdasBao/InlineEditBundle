@@ -2,3 +2,8 @@ ardasbao_inlineedit_variables:
     resource: "@ArdasBaoInlineEditBundle/Controller/VariableController.php"
     type:     annotation
     prefix:   /
+
+ardasbao_inlineedit_entity_field:
+    resource: "@ArdasBaoInlineEditBundle/Controller/EntityFieldController.php"
+    type:     annotation
+    prefix:   /
