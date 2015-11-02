@@ -25,6 +25,7 @@ class InlineEditExtension extends \Twig_Extension
         return array(
             'getInlineEditableVariable' => new \Twig_Function_Method($this, 'getInlineEditableVariable'),
             'getInlineEditableHTMLVariable' => new \Twig_Function_Method($this, 'getInlineEditableHTMLVariable'),
+            'getInlineEditableEntityField' => new \Twig_Function_Method($this, 'getInlineEditableEntityField'),
             'isInlineEditAllowed' => new \Twig_Function_Method($this, 'isInlineEditAllowed'),
         );
     }
@@ -82,6 +83,42 @@ class InlineEditExtension extends \Twig_Extension
         else {
             return $value;
         }
+    }
+
+    /**
+     * Return entity field value wrapped for client-side inline editor if inline editing is allowed for current user, and
+     * simple entity field value if doesn't.
+     *
+     * @param $entity
+     * @param $fieldName
+     * @param string $type
+     * @param null $preset
+     * @return null|string
+     */
+    public function getInlineEditableEntityField($entity, $fieldName, $type = 'text', $preset = NULL)
+    {
+        $result = '';
+        $entityType = get_class($entity);
+        $fieldNameUcfirst = ucfirst($fieldName);
+        $getterGet = 'get' . $fieldNameUcfirst;
+//        $getterIs  = 'is' . $fieldNameUcfirst;
+
+        if(method_exists($entity, $getterGet)) {
+            $value = $entity->$getterGet();
+        }
+//       @todo support boolean fields with 'is' getter
+//        elseif(method_exists($entity, $getterGet)) {
+//            $value = $entity->$getterIs();
+//        }
+
+        if ($this->getInlineEditor()->isInlineEditAllowed()) {
+            $result = '<span data-baoinlineeditor-entity-field data-baoinlineeditor-entity-type="' . $entityType . '" data-baoinlineeditor-entity-id="' . $entity->getId() . '" data-baoinlineeditor-field-name="' . $fieldName . '" data-baoinlineeditor-type="' . $type . '">' . $value . '</span>';
+        }
+        else {
+            $result =  $value;
+        }
+
+        return $result;
     }
 
     /**
