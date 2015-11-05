@@ -9,7 +9,7 @@
 
     ////////////////
 
-    function BaoInlineEditorBaseController($scope, $element, $attrs, $compile, $rootScope, $http, $q, baoInlineEditor) {
+    function BaoInlineEditorBaseController($scope, $element, $attrs, $compile, $rootScope, $http, $q, baoInlineEditor, $sce) {
         $scope.data = '';
         $scope.enabled = baoInlineEditor.enabled;
         $scope.state = 'show';
@@ -20,6 +20,10 @@
         $scope.init = init;
         $scope.getChildDirective = getChildDirective;
 
+        $scope.trustAsHtml = function(string) {
+            return $sce.trustAsHtml(string);
+        };
+	
         activate();
 
         ////////////////
@@ -97,7 +101,7 @@
                         '</span>' +
                         '<div class="baoinlineeditor-error" data-ng-show="error" data-ng-bind="error"></div>';
                 case 'ckeditor':
-                    return '<div data-ck-inlineeditor="data" data-e-form="editorForm" data-ng-bind-html="data || \'empty\'" data-ck-inlineeditor-preset="' + ($attrs.ckInlineeditorPreset != undefined ? $attrs.ckInlineeditorPreset : '') + '" data-onbeforesave="save(api.data)"></div>' +
+                    return  '<div data-ck-inlineeditor="data" data-e-form="editorForm" data-ng-bind-html="trustAsHtml(data)|| \'empty\'" data-ck-inlineeditor-preset="' + ($attrs.ckInlineeditorPreset != undefined ? $attrs.ckInlineeditorPreset : '') + '" data-onbeforesave="save(api.data)"></div>' +
                         '<span class="baoinlineeditor-buttons">' +
                         '<span class="baoinlineeditor-button baoinlineeditor-button-throbber" title="Saving..." data-ng-show="state == \'saving\' || editorForm.waiting"></span>' +
                         '<span class="baoinlineeditor-button baoinlineeditor-error" data-ng-show="error" data-ng-bind="error"></span>' +
@@ -198,3 +202,4 @@
     }
 
 })(angular);
+
