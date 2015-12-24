@@ -18,6 +18,7 @@ services:
     ardasbao.inlineeditor.extension:
           class: '%ardasbao.inlineeditor.extension.class%'
           arguments:
+              - '@service_container'
               - '@ardasbao.inlineeditor'
           tags:
               - { name: twig.extension }

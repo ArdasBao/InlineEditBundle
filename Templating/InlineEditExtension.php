@@ -10,13 +10,16 @@ namespace ArdasBao\InlineEditBundle\Templating;
 
 use ArdasBao\InlineEditBundle\Services\InlineEditor;
 use ArdasBao\InlineEditBundle\Templating\TokenParser\InlineEditorTokenParser;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class InlineEditExtension extends \Twig_Extension
 {
     protected $inlineEditor;
+    protected $serviceContainer;
 
-    public function __construct(InlineEditor $inlineEditor)
+    public function __construct(ContainerInterface $serviceContainer, InlineEditor $inlineEditor)
     {
+        $this->serviceContainer = $serviceContainer;
         $this->inlineEditor = $inlineEditor;
     }
 
@@ -93,9 +96,10 @@ class InlineEditExtension extends \Twig_Extension
      * @param $fieldName
      * @param string $type
      * @param null $preset
+     * @param string $defaultImageUrl
      * @return null|string
      */
-    public function getInlineEditableEntityField($entity, $fieldName, $type = 'text', $preset = NULL)
+    public function getInlineEditableEntityField($entity, $fieldName, $type = 'text', $preset = NULL, $defaultImageUrl = '')
     {
         $result = '';
         $entityType = get_class($entity);
@@ -111,11 +115,37 @@ class InlineEditExtension extends \Twig_Extension
 //            $value = $entity->$getterIs();
 //        }
 
+        if ($type == 'image') {
+            if (empty($value)) {
+                $imageUrl = $defaultImageUrl;
+            } else {
+                $imageId = $value;
+                $em = $this->serviceContainer->get('doctrine')->getEntityManager();
+                $imageClassName = $em->getClassMetadata($entityType)->getAssociationTargetClass($fieldName);
+                $image = $em->getRepository($imageClassName)->find($imageId);
+                $thumbnailUrl = NULL;
+                $imageUrl = $image->getWebPath();
+            }
+            if (!empty($preset) && !empty($imageUrl)) {
+               $thumbnailUrl = $this->serviceContainer->get('ardas.file_uploader')->generateImageThumbnailUrl($imageUrl, $preset);
+            } else {
+                $thumbnailUrl = $imageUrl;
+            }
+        }
+
         if ($this->getInlineEditor()->isInlineEditAllowed()) {
-            $result = '<span data-baoinlineeditor-entity-field data-baoinlineeditor-entity-type="' . $entityType . '" data-baoinlineeditor-entity-id="' . $entity->getId() . '" data-baoinlineeditor-field-name="' . $fieldName . '" data-baoinlineeditor-type="' . $type . '">' . $value . '</span>';
+            if ($type == 'image') {
+                $result = '<span data-baoinlineeditor-entity-field data-baoinlineeditor-entity-type="' . $entityType . '" data-baoinlineeditor-entity-id="' . $entity->getId() . '" data-baoinlineeditor-field-name="' . $fieldName . '" data-baoinlineeditor-type="' . $type . '"' . '" data-baoinlineeditor-image-thumbnail-url="' . $thumbnailUrl . '" data-baoinlineeditor-image-preset="' . $preset . '"></span>';
+            } else {
+                $result = '<span data-baoinlineeditor-entity-field data-baoinlineeditor-entity-type="' . $entityType . '" data-baoinlineeditor-entity-id="' . $entity->getId() . '" data-baoinlineeditor-field-name="' . $fieldName . '" data-baoinlineeditor-type="' . $type . '">' . $value . '</span>';
+            }
         }
         else {
-            $result =  $value;
+            if ($type == 'image') {
+                $result =  '<img data-ng-src="' . $thumbnailUrl . '">';
+            } else {
+                $result =  $value;
+            }
         }
 
         return $result;
