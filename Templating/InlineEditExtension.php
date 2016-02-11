@@ -112,7 +112,11 @@ class InlineEditExtension extends \Twig_Extension
 //        }
 
         if ($this->getInlineEditor()->isInlineEditAllowed()) {
-            $result = '<span data-baoinlineeditor-entity-field data-baoinlineeditor-entity-type="' . $entityType . '" data-baoinlineeditor-entity-id="' . $entity->getId() . '" data-baoinlineeditor-field-name="' . $fieldName . '" data-baoinlineeditor-type="' . $type . '">' . $value . '</span>';
+            if ($type == 'text') {
+                $result = '<span data-baoinlineeditor-entity-field data-baoinlineeditor-entity-type="' . $entityType . '" data-baoinlineeditor-entity-id="' . $entity->getId() . '" data-baoinlineeditor-field-name="' . $fieldName . '" data-baoinlineeditor-type="' . $type . '">' . $value . '</span>';
+            } else if ($type == 'ckeditor') {
+                $result = '<span data-baoinlineeditor-entity-field data-baoinlineeditor-entity-type="' . $entityType . '" data-baoinlineeditor-entity-id="' . $entity->getId() . '" data-baoinlineeditor-field-name="' . $fieldName . '" data-baoinlineeditor-type="' . $type . '"  data-ck-inlineeditor-preset="' . $preset . '">' . $value . '</span>';
+            }
         }
         else {
             $result =  $value;
