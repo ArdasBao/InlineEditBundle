@@ -136,8 +136,10 @@ class InlineEditExtension extends \Twig_Extension
         if ($this->getInlineEditor()->isInlineEditAllowed()) {
             if ($type == 'image') {
                 $result = '<span data-baoinlineeditor-entity-field data-baoinlineeditor-entity-type="' . $entityType . '" data-baoinlineeditor-entity-id="' . $entity->getId() . '" data-baoinlineeditor-field-name="' . $fieldName . '" data-baoinlineeditor-type="' . $type . '"' . '" data-baoinlineeditor-image-thumbnail-url="' . $thumbnailUrl . '" data-baoinlineeditor-image-preset="' . $preset . '"></span>';
-            } else {
+            } elseif ($type == 'text') {
                 $result = '<span data-baoinlineeditor-entity-field data-baoinlineeditor-entity-type="' . $entityType . '" data-baoinlineeditor-entity-id="' . $entity->getId() . '" data-baoinlineeditor-field-name="' . $fieldName . '" data-baoinlineeditor-type="' . $type . '">' . $value . '</span>';
+            } elseif ($type == 'ckeditor') {
+                $result = '<span data-baoinlineeditor-entity-field data-baoinlineeditor-entity-type="' . $entityType . '" data-baoinlineeditor-entity-id="' . $entity->getId() . '" data-baoinlineeditor-field-name="' . $fieldName . '" data-baoinlineeditor-type="' . $type . '"  data-ck-inlineeditor-preset="' . $preset . '">' . $value . '</span>';
             }
         }
         else {
