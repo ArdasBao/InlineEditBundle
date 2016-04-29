@@ -52,4 +52,28 @@
     overflow: visible;
 }
 
+.baoinlineeditor-image .upload-button {
+    width: 255px;
+    height: 100%;
+    display: block;
+    text-align: center;
+    font-size: 15px;
+    font-weight: normal;
+    color: #fff;
+    cursor: pointer;
+    padding: 17px 12px;
+    text-decoration: underline;
+    background: url("/images/upload-overlay.png") repeat;
+}
+
+.baoinlineeditor-image input[type="file"] {
+    position: relative;
+    top: -55px;
+    height: 55px;
+    z-index: 200;
+    width: 100%;
+    opacity: 0;
+    filter: alpha(opacity=0);
+    cursor: pointer;
+}
 
